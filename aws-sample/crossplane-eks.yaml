@@ -1,0 +1,13 @@
+apiVersion: apiVersion: eks.aws.crossplane.io/v1beta1
+kind: Cluster
+metadata:
+   name: crossplane-eks
+   namespace: vote-app
+spec:
+   forProvider:
+        region: us-east-1
+        resourcesVpcConfig:
+            endpointPrivateAccess: "Yes"
+            endpointPublicAccess: "Yes"
+            publicAccessCidrs: "0.0.0.0/0"
+            roleArn: arn:aws:iam::708889402310:role/EKSCluster
