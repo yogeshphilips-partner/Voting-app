@@ -11,6 +11,9 @@ spec:
     engine: postgres
     engineVersion: "9.6"
     skipFinalSnapshotBeforeDeletion: true
+    tags:
+    - key: Group
+      value: Krishna
   writeConnectionSecretToRef:
     namespace: crossplane-system
     name: aws-rdspostgresql-conn
