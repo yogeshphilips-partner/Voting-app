@@ -1,13 +1,162 @@
-apiVersion: apiVersion: eks.aws.crossplane.io/v1beta1
+apiVersion: eks.aws.crossplane.io/v1beta1
 kind: Cluster
 metadata:
-   name: crossplane-eks
-   namespace: vote-app
+  name: cluster-eks
+  labels:
+    provider: aws
+    cluster: eks
+      spec:
+        forProvider:
+          region: us-east-1
+          version: "1.20"
+          resourcesVpcConfig:
+            endpointPrivateAccess: true
+            endpointPublicAccess: true
+          subnetIdSelector:
+            matchControllerRef: true
+-------------------
+apiVersion: eks.aws.crossplane.io/v1alpha1
+kind: NodeGroup
 spec:
    forProvider:
+     region: us-east-1
+     clusterNameSelector:
+        matchControllerRef: true
+     nodeRoleSelector:
+        matchControllerRef: true
+            matchLabels:
+              role: nodegroup
+          subnetSelector:
+            matchLabels:
+              access: public
+          scalingConfig:
+            minSize: 1
+            maxSize: 10
+            desiredSize: 1
+          instanceTypes:
+            - t3.small
+----------
+
+apiVersion: ec2.aws.crossplane.io/v1beta1
+kind: VPC
+spec:
+   forProvider:
+      region: us-east-1
+      cidrBlock: 10.0.0.0/16
+      tags:
+        - key: Name
+          value: devops-catalog
+        - key: kubernetes.io/cluster/devops-catalog
+          value: shared
+ ----------
+ apiVersion: ec2.aws.crossplane.io/v1beta1
+ kind: SecurityGroup
+ spec:
+   forProvider:
+     description: Cluster communication with worker nodes
+     groupName: devops-catalog
+     region: us-east-1
+     vpcIdSelector:
+       matchControllerRef: true
+     egress:
+       - fromPort: 0
+         toPort: 0
+         ipProtocol: "-1"
+         ipRanges:
+           - cidrIp: "0.0.0.0/0"
+ --------------
+apiVersion: ec2.aws.crossplane.io/v1beta1
+kind: Subnet
+   metadata:
+     labels:
+       zone: us-east-1a
+       access: public
+   spec:
+     forProvider:
         region: us-east-1
-        resourcesVpcConfig:
-            endpointPrivateAccess: "Yes"
-            endpointPublicAccess: "Yes"
-            publicAccessCidrs: "0.0.0.0/0"
-            roleArn: arn:aws:iam::708889402310:role/EKSCluster
+        availabilityZone: us-east-1a
+        cidrBlock: 10.0.0.0/24
+        vpcIdSelector:
+          matchControllerRef: true
+          mapPublicIPOnLaunch: true
+        tags:
+          - key: Name
+            value: devops-catalog
+          - key: kubernetes.io/cluster/devops-catalog
+            value: shared
+ ---------------
+apiVersion: ec2.aws.crossplane.io/v1beta1
+kind: Subnet
+  metadata:
+    labels:
+      zone: us-east-1b
+      access: public
+    spec:
+      forProvider:
+      region: us-east-1
+      availabilityZone: us-east-1b
+      cidrBlock: 10.0.1.0/24
+      vpcIdSelector:
+         matchControllerRef: true
+        mapPublicIPOnLaunch: true
+      tags:
+        - key: Name
+          value: devops-catalog
+        - key: kubernetes.io/cluster/devops-catalog
+          value: shared
+  -------------
+apiVersion: ec2.aws.crossplane.io/v1beta1
+kind: Subnet
+  metadata:
+    labels:
+       zone: us-east-1c
+       access: public
+  spec:
+        forProvider:
+          region: us-east-1
+          availabilityZone: us-east-1c
+          cidrBlock: 10.0.2.0/24
+          vpcIdSelector:
+            matchControllerRef: true
+          mapPublicIPOnLaunch: true
+          tags:
+            - key: Name
+              value: devops-catalog
+            - key: kubernetes.io/cluster/devops-catalog
+              value: shared
+ ---------------
+apiVersion: ec2.aws.crossplane.io/v1beta1
+kind: InternetGateway
+spec:
+        forProvider:
+          region: us-east-1
+          vpcIdSelector:
+            matchControllerRef: true
+--------------------            
+apiVersion: ec2.aws.crossplane.io/v1beta1
+kind: RouteTable
+  spec:
+      forProvider:
+          region: us-east-1
+          vpcIdSelector:
+            matchControllerRef: true
+          routes:
+            - destinationCidrBlock: 0.0.0.0/0
+              gatewayIdSelector:
+                matchControllerRef: true
+          associations:
+            - subnetIdSelector:
+                matchControllerRef: true
+                matchLabels:
+                  zone: us-east-1a
+                  access: public
+            - subnetIdSelector:
+                matchControllerRef: true
+                matchLabels:
+                  zone: us-east-1b
+                  access: public
+            - subnetIdSelector:
+                matchControllerRef: true
+                matchLabels:
+                  zone: us-east-1c
+                  access: public
