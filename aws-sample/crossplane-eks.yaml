@@ -14,6 +14,9 @@ metadata:
             endpointPublicAccess: true
           subnetIdSelector:
             matchControllerRef: true
+          tags:
+             - key: Group
+               value: Krishna
 -------------------
 apiVersion: eks.aws.crossplane.io/v1alpha1
 kind: NodeGroup
@@ -35,6 +38,9 @@ spec:
             desiredSize: 1
           instanceTypes:
             - t3.small
+          tags:
+             - key: Group
+               value: Krishna
 ----------
 
 apiVersion: ec2.aws.crossplane.io/v1beta1
@@ -44,10 +50,8 @@ spec:
       region: us-east-1
       cidrBlock: 10.0.0.0/16
       tags:
-        - key: Name
-          value: devops-catalog
-        - key: kubernetes.io/cluster/devops-catalog
-          value: shared
+        - key: Group
+          value: Krishna
  ----------
  apiVersion: ec2.aws.crossplane.io/v1beta1
  kind: SecurityGroup
@@ -64,6 +68,9 @@ spec:
          ipProtocol: "-1"
          ipRanges:
            - cidrIp: "0.0.0.0/0"
+         tags:
+           - key: Group
+             value: Krishna
  --------------
 apiVersion: ec2.aws.crossplane.io/v1beta1
 kind: Subnet
@@ -80,10 +87,8 @@ kind: Subnet
           matchControllerRef: true
           mapPublicIPOnLaunch: true
         tags:
-          - key: Name
-            value: devops-catalog
-          - key: kubernetes.io/cluster/devops-catalog
-            value: shared
+           - key: Group
+             value: Krishna
  ---------------
 apiVersion: ec2.aws.crossplane.io/v1beta1
 kind: Subnet
@@ -100,10 +105,8 @@ kind: Subnet
          matchControllerRef: true
         mapPublicIPOnLaunch: true
       tags:
-        - key: Name
-          value: devops-catalog
-        - key: kubernetes.io/cluster/devops-catalog
-          value: shared
+        - key: Group
+          value: Krishna
   -------------
 apiVersion: ec2.aws.crossplane.io/v1beta1
 kind: Subnet
@@ -120,10 +123,8 @@ kind: Subnet
             matchControllerRef: true
           mapPublicIPOnLaunch: true
           tags:
-            - key: Name
-              value: devops-catalog
-            - key: kubernetes.io/cluster/devops-catalog
-              value: shared
+           - key: Group
+             value: Krishna
  ---------------
 apiVersion: ec2.aws.crossplane.io/v1beta1
 kind: InternetGateway
@@ -132,6 +133,9 @@ spec:
           region: us-east-1
           vpcIdSelector:
             matchControllerRef: true
+          tags:
+           - key: Group
+             value: Krishna
 --------------------            
 apiVersion: ec2.aws.crossplane.io/v1beta1
 kind: RouteTable
@@ -160,3 +164,6 @@ kind: RouteTable
                 matchLabels:
                   zone: us-east-1c
                   access: public
+          tags:
+              - key: Group
+                value: Krishna
