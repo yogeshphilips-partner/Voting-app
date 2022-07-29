@@ -1,12 +1,12 @@
 apiVersion: cache.aws.crossplane.io/v1alpha1
 kind: CacheCluster
 spec:
-	forProvider:
-		cacheNodeType: "cache.t2.micro" 
-		numCacheNodes: 3
-		cacheSecurityGroupNames: "elasticache-demo-sg"
-		securityGroupIds: "sg-004209965c448fbe3"
-		region: "us-east-1"
-		tags: 
-		- key: "Group"
-		  value: "Krishna"
+   forProvider:
+	cacheNodeType: "cache.t2.micro" 
+	numCacheNodes: 3
+	cacheSecurityGroupNames: "elasticache-demo-sg"
+	securityGroupIds: "sg-004209965c448fbe3"
+	region: "us-east-1"
+	tags: 
+	- key: "Group"
+	  value: "Krishna"
