@@ -8,8 +8,3 @@ spec:
     tags: 
       - key: "Group"
         value: "Krishna"
-  publishConnectionDetailsTo:
-    - name: "redis-elastic-cache"
-  writeConnectionSecretToReference:
-    - name: "Secret-redis-elastic-cache"
-      namespace: "crossplane-system"
