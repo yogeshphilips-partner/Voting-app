@@ -1,7 +1,6 @@
 apiVersion: elasticache.aws.crossplane.io/v1alpha1
 kind: CacheParameterGroup
 spec:
-  deletionPolicy: "Delete"
   forProvider:
     cacheParameterGroupFamily: "redis6.x"
     description: "crossplane-provisioned"
@@ -9,8 +8,8 @@ spec:
     tags: 
       - key: "Group"
         value: "Krishna"
-   publishConnectionDetailsTo:
+  publishConnectionDetailsTo:
     - name: "redis-elastic-cache"
-   writeConnectionSecretToReference:
+  writeConnectionSecretToReference:
     - name: "Secret-redis-elastic-cache"
       namespace: "crossplane-system"
