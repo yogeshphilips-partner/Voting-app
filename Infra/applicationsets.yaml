@@ -12,13 +12,13 @@ spec:
         url: https://127.0.0.1:60164
   template:
     metadata:
-      name: '{{cluster}}-votingapp1'
+      name: 'votingapp1'
     spec:
       project: default
       source:
         repoURL: https://github.com/yogeshphilips-partner/Voting-app.git
         targetRevision: HEAD
-        path: K8s-deploy/{{cluster}}
+        path: K8s-deploy/
       destination:
         server: '{{url}}'
         namespace: default
