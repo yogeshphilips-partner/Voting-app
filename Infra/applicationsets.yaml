@@ -9,7 +9,7 @@ spec:
       - cluster: arn:aws:eks:us-east-1:376329890665:cluster/krishna-k8s-cluster
         url: 172.20.0.1:443
       - cluster: minikube
-        url: https://127.0.0.1:60164
+        url: https://127.0.0.1:31364
   template:
     metadata:
       name: 'votingapp1'
