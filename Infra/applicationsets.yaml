@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: votingapp
+spec:
+  generators:
+  - list:
+      elements:
+      - cluster: arn:aws:eks:us-east-1:376329890665:cluster/krishna-k8s-cluster
+        url: 172.20.0.1:443
+      - cluster: minikube
+        url: https://127.0.0.1:60164
+  template:
+    metadata:
+      name: '{{cluster}}-votingapp1'
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/yogeshphilips-partner/Voting-app.git
+        targetRevision: HEAD
+        path: K8s-deploy/{{cluster}}
+      destination:
+        server: '{{url}}'
+        namespace: default
