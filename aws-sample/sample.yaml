@@ -1,0 +1,14 @@
+apiVersion: ec2.aws.crossplane.io/v1alpha1
+kind: Instance
+spec:
+	forProvider:
+		imageID: "ami-052efd3df9dad4825"
+		region: "us-east-1"
+		instanceType: "t3a.small"
+		subnetId: "subnet-06b95a2753492a4f7"
+		tags:
+			- key: "Group"
+			  value: "Krishna"
+	  writeConnectionSecretToRef:
+  		namespace: crossplane-system
+    		name: aws-ec2
